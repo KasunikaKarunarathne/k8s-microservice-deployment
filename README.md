@@ -34,19 +34,19 @@ This project focuses on core Kubernetes concepts without introducing additional 
 ---
 
 ## Repository Structure
-
+```
 k8s-microservice-deployment/
 │
-├── app.py # Flask microservice
-├── requirements.txt # Python dependencies
-├── Dockerfile # Container build configuration
+├── app.py                  # Flask microservice
+├── requirements.txt        # Python dependencies
+├── Dockerfile              # Container build configuration
 │
 ├── k8s/
-│ ├── deployment.yaml # Kubernetes Deployment manifest
-│ └── service.yaml # Kubernetes Service manifest
+│   ├── deployment.yaml     # Kubernetes Deployment manifest
+│   └── service.yaml        # Kubernetes Service manifest
 │
 └── README.md
-
+```
 
 ---
 
@@ -88,57 +88,63 @@ The application is deployed using:
 
 ## How to Run
 
-### Start Minikube
-
+### 1. Start Minikube
 ```bash
 minikube start --driver=docker
+```
 
-Build Docker image inside Minikube
+### 2. Build Docker image inside Minikube
+```bash
 eval $(minikube -p minikube docker-env)
 docker build -t flask-k8s:1.0 .
+```
 
-Apply Kubernetes manifests
+### 3. Apply Kubernetes manifests
+```bash
 kubectl apply -f k8s/deployment.yaml
 kubectl apply -f k8s/service.yaml
+```
 
-Verify pods and service
+### 4. Verify pods and service
+```bash
 kubectl get pods
 kubectl get svc
+```
 
-Access application
+### 5. Access application
+```bash
 minikube service flask-k8s-svc --url
+```
 
-Outputs and Verification
+---
 
-Two pods running successfully
+## Outputs and Verification
 
-NodePort service exposing application externally
+- Two pods running successfully
+- NodePort service exposing application externally
+- Continuous `/health` requests from Kubernetes probes
+- Deployment reports all replicas available
+- Logs confirm active health checks
 
-Continuous /health requests from Kubernetes probes
-
-Deployment reports all replicas available
-
-Logs confirm active health checks
-
-Commands used for verification:
-
+### Commands used for verification:
+```bash
 kubectl get pods -o wide
 kubectl describe deployment flask-k8s
 kubectl logs -l app=flask-k8s
+```
+
 ---
 
-Key Learnings
+## Key Learnings
 
-Containerized applications can be managed efficiently using Kubernetes Deployments
+- Containerized applications can be managed efficiently using Kubernetes Deployments
+- Services enable external access and load balancing across replicas
+- Readiness and liveness probes provide automated health monitoring
+- Minikube is sufficient for local Kubernetes experimentation
+- kubectl is essential for debugging and inspecting cluster state
 
-Services enable external access and load balancing across replicas
+---
 
-Readiness and liveness probes provide automated health monitoring
-
-Minikube is sufficient for local Kubernetes experimentation
-
-kubectl is essential for debugging and inspecting cluster state
-
-Conclusion
+## Conclusion
 
 This project provides practical exposure to Kubernetes fundamentals by deploying a real containerized microservice. It demonstrates the complete workflow from application development and Dockerization to Kubernetes deployment, service exposure, scaling, and health monitoring.
